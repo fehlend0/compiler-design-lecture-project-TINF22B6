@@ -63,6 +63,10 @@ public class Lexer implements ILexer {
 
     private Token consumeToken() {
         // TODO:
+        CodeLoc loc = reader.getCodeLoc();
+        if(reader.isEOF()){
+            return new Token(TokenType.TOK_EOF, "EOF", loc);
+        }
         return null;
     }
 }

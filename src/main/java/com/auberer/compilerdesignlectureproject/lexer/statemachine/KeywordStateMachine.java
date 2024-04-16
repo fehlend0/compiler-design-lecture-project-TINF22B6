@@ -12,7 +12,6 @@ public class KeywordStateMachine extends StateMachine{
 
     @Override
     public void init() {
-        State deny = new State("deny");
         State s = new State("start");
         s.setStartState(true);
 
@@ -20,11 +19,9 @@ public class KeywordStateMachine extends StateMachine{
             State newS = new State(String.valueOf(c));
             addState(s);
             addCharTransition(s, newS, c);
-            addElseTransition(s, deny);
             s = newS;
         }
         s.setAcceptState(true);
-        addElseTransition(s, deny);
 
     }
 

@@ -9,14 +9,12 @@ public class DoubleLiteralStateMachine extends StateMachine{
         State d1 = new State("d1");
         State intermediate = new State ("intermediate");
         State accept = new State("accept");
-        State deny = new State("deny");
 
         start.setStartState(true);
         accept.setAcceptState(true);
 
         addState(start);
         addState(intermediate);
-        addState(deny);
         addState(accept);
 
         addRangeTransition(start, d1, new Range('0', '9'));
@@ -24,12 +22,6 @@ public class DoubleLiteralStateMachine extends StateMachine{
         addCharTransition(d1, intermediate, ',');
         addRangeTransition(intermediate, accept, new Range('0', '9'));
         addRangeTransition(accept, accept, new Range('0', '9'));
-
-        addElseTransition(start, deny);
-        addElseTransition(d1, deny);
-        addElseTransition(intermediate, deny);
-        addElseTransition(accept, deny);
-        addElseTransition(deny, deny);
 
     }
 

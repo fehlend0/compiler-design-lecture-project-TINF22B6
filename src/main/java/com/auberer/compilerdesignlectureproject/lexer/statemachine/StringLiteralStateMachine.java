@@ -6,7 +6,6 @@ public class StringLiteralStateMachine extends StateMachine {
     @Override
     public void init() {
         State start = new State("start");
-        State deny = new State("deny");
         State intermediate = new State("intermediate");
         State accept = new State("accept");
 
@@ -14,7 +13,6 @@ public class StringLiteralStateMachine extends StateMachine {
         accept.setAcceptState(true);
 
         addState(start);
-        addState(deny);
         addState(intermediate);
         addState(accept);
 
@@ -22,10 +20,6 @@ public class StringLiteralStateMachine extends StateMachine {
         addRangeTransition(intermediate, intermediate, new Range(' ', '!'));
         addRangeTransition(intermediate, intermediate, new Range('#', '~'));
         addCharTransition(intermediate, accept, '"');
-        addElseTransition(start, deny);
-        addElseTransition(intermediate, deny);
-        addElseTransition(deny, deny);
-        addElseTransition(accept, deny);
     }
 
     @Override
