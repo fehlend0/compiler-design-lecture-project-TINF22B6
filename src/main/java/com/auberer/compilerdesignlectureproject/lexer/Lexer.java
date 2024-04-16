@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.auberer.compilerdesignlectureproject.reader.Reader;
+import lombok.Getter;
 
 /**
  * Input: Character Strean
@@ -18,26 +19,34 @@ public class Lexer implements ILexer {
     private final Reader reader;
     private Token currentToken;
 
+    @Getter
+    private List<Token> tokens = new ArrayList<>();
+
     private List<StateMachine> stateMachineList = new ArrayList<>();
 
     public Lexer(String inputFilePath) throws IOException {
         this.reader = new Reader(inputFilePath);
 
-        stateMachineList.add(new IntegerLiteralStateMachine());
-        stateMachineList.add(new KeywordStateMachine("DankeRoethig"));
+        stateMachineList.add(new IdentifierStateMachine());
         stateMachineList.add(new StringLiteralStateMachine());
-        stateMachineList.add(new KeywordStateMachine("XSLT"));
-        stateMachineList.add(new KeywordStateMachine("XML"));
-        stateMachineList.add(new DoubleLiteralStateMachine());
         stateMachineList.add(new IntegerLiteralStateMachine());
+        stateMachineList.add(new DoubleLiteralStateMachine());
+        stateMachineList.add(new KeywordStateMachine("int"));
+        stateMachineList.add(new KeywordStateMachine("double"));
+        stateMachineList.add(new KeywordStateMachine("String"));
 
         for (StateMachine stateMachine : stateMachineList) {
             stateMachine.init();
             stateMachine.reset();
         }
 
-        // Read the 1st token
-        advance();
+    }
+
+    public void start() throws IOException {
+        do {
+            advance();
+        }
+        while(!isEOF());
     }
 
     @Override
@@ -51,7 +60,10 @@ public class Lexer implements ILexer {
         while (Character.isWhitespace(reader.getChar())) {
             reader.advance();
         }
-        currentToken = consumeToken();
+        Token token = consumeToken();
+
+        currentToken = token;
+        tokens.add(token);
     }
 
     @Override
@@ -87,7 +99,6 @@ public class Lexer implements ILexer {
         }
 
         for (StateMachine stateMachine : stateMachineList) {
-            stateMachine.init();
             stateMachine.reset();
         }
 
@@ -95,39 +106,42 @@ public class Lexer implements ILexer {
         StateMachine acceptingMachine = null;
         StringBuilder currentToken = new StringBuilder();
 
+        CodeLoc loc = reader.getCodeLoc();
+        loc = new CodeLoc(loc.getLine(), loc.getColumn());
+
         while(!runningMachines.isEmpty()){
+            if(reader.isEOF()){
+                break;
+            }
+
+            char currentChar = reader.getChar();
+            if(currentChar == '\r' || currentChar == '\n'){
+                break;
+            }
+
+            currentToken.append(currentChar);
+            List<StateMachine> endedMachines = new ArrayList<>();
             for(StateMachine stateMachine: runningMachines){
-                currentToken.append(reader.getChar());
                 try {
-                    stateMachine.processInput(reader.getChar());
+                    stateMachine.processInput(currentChar);
                 }
                 catch(IllegalStateException ex){
-                    runningMachines.remove(stateMachine);
+                    endedMachines.add(stateMachine);
                 }
                 if(stateMachine.isInAcceptState()){
                     acceptingMachine = stateMachine;
-                    runningMachines.remove(stateMachine);
                 }
             }
+            runningMachines.removeAll(endedMachines);
+            endedMachines.clear();
             reader.advance();
         }
 
-        if(acceptingMachine instanceof IntegerLiteralStateMachine){
-            return new Token(TokenType.TOK_INTEGER, currentToken.toString(), reader.getCodeLoc());
-        }
-        else if(acceptingMachine instanceof DoubleLiteralStateMachine){
-            return new Token(TokenType.TOK_DOUBLE, currentToken.toString(), reader.getCodeLoc());
-        }
-        else if(acceptingMachine instanceof StringLiteralStateMachine){
-            return new Token(TokenType.TOK_STRING, currentToken.toString(), reader.getCodeLoc());
-        }
-        else if(acceptingMachine instanceof IdentifierStateMachine){
-            return new Token(TokenType.TOK_IDENTIFIER, currentToken.toString(), reader.getCodeLoc());
-        }
-        else if(acceptingMachine instanceof KeywordStateMachine){
-            return new Token(TokenType.TOK_KEYWORD, currentToken.toString(), reader.getCodeLoc());
+        if(acceptingMachine == null){
+            return new Token(TokenType.TOK_INVALID, currentToken.toString(), loc);
         }
 
-        return null;
+        return new Token(acceptingMachine.getTokenType(), currentToken.toString(), loc);
     }
+
 }

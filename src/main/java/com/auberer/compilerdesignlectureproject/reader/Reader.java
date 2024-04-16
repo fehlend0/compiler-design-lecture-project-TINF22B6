@@ -40,7 +40,7 @@ public class Reader implements IReader{
         } else {
             if (currentChar == '\n') {
                 codeLoc.line++;
-                codeLoc.column = 0;
+                codeLoc.column = 1;
             } else {
                 codeLoc.column++;
             }

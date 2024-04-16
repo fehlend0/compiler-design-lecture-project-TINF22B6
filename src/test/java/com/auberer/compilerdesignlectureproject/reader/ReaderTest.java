@@ -11,12 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReaderTest {
 
-    static String testfile = new String("compiler-design-lecture-project-TINF22B6/test.txt");
-    static String emptyfile = new String("compiler-design-lecture-project-TINF22B6/test.txt");
+    static String basePath = System.getProperty("user.dir");
+    static String testfile = new String(basePath + "/test.txt");
+    static String emptyfile = new String(basePath + "/empty.txt");
 
 
     @Test
-    @DisplayName("This is a dafault Test")
+    @DisplayName("This is a default Test")
     public void test() {
         System.out.printf("This is a test:%n");
         Assertions.assertEquals("Test", "Test");

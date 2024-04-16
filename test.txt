@@ -1,1 +1,3 @@
-Irgendwas
+int a 10
+"hello world" double ddd
+22,5
