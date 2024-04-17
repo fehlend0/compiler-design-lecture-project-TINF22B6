@@ -84,7 +84,7 @@ public class Lexer implements ILexer {
 
     @Override
     public boolean isEOF() {
-        return this.currentToken.type == TokenType.TOK_EOF;
+        return this.reader.isEOF();
     }
 
     @Override
