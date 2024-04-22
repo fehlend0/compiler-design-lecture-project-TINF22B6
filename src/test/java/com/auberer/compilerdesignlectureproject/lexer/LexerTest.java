@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,33 +20,48 @@ public class LexerTest {
     @DisplayName("Test for End of file")
     public void isEOF() throws IOException {
         Lexer lexer = new Lexer(emptyfile);
-        lexer.start();
+        List<Token> tokens = new ArrayList<>();
+        do {
+            lexer.advance();
+            tokens.add(lexer.getToken());
+        }
+        while(!lexer.isEOF());
 
-        assertEquals(lexer.getTokens().size(), 1);
-        assertEquals(lexer.getTokens().get(0).getType(), TokenType.TOK_EOF);
+        assertEquals(tokens.size(), 1);
+        assertEquals(tokens.get(0).getType(), TokenType.TOK_EOF);
     }
 
     @Test
     @DisplayName("Test for invalid token")
     public void isInvalid() throws IOException {
         Lexer lexer = new Lexer(invalidFile);
-        lexer.start();
+        List<Token> tokens = new ArrayList<>();
+        do {
+            lexer.advance();
+            tokens.add(lexer.getToken());
+        }
+        while(!lexer.isEOF());
 
-        assertEquals(lexer.getTokens().get(0).getType(), TokenType.TOK_INVALID);
+        assertEquals(tokens.get(0).getType(), TokenType.TOK_INVALID);
     }
 
     @Test
     @DisplayName("Test for valid file")
     public void isValid() throws IOException{
         Lexer lexer = new Lexer(testfile);
-        lexer.start();
+        List<Token> tokens = new ArrayList<>();
+        do {
+            lexer.advance();
+            tokens.add(lexer.getToken());
+        }
+        while(!lexer.isEOF());
 
-        assertEquals(lexer.getTokens().size(), 8);
+        assertEquals(tokens.size(), 8);
 
         TokenType[] expected = {TokenType.TOK_KEYWORD, TokenType.TOK_IDENTIFIER, TokenType.TOK_INTEGER, TokenType.TOK_STRING, TokenType.TOK_KEYWORD, TokenType.TOK_IDENTIFIER, TokenType.TOK_DOUBLE, TokenType.TOK_EOF};
 
-        for(int i = 0; i < lexer.getTokens().size(); i++){
-            assertEquals(lexer.getTokens().get(i).getType(), expected[i]);
+        for(int i = 0; i < tokens.size(); i++){
+            assertEquals(tokens.get(i).getType(), expected[i]);
         }
 
     }

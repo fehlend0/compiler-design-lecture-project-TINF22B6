@@ -19,9 +19,6 @@ public class Lexer implements ILexer {
     private final Reader reader;
     private Token currentToken;
 
-    @Getter
-    private List<Token> tokens = new ArrayList<>();
-
     private List<StateMachine> stateMachineList = new ArrayList<>();
 
     public Lexer(String inputFilePath) throws IOException {
@@ -42,12 +39,6 @@ public class Lexer implements ILexer {
 
     }
 
-    public void start() throws IOException {
-        do {
-            advance();
-        }
-        while(!isEOF());
-    }
 
     @Override
     public Token getToken() {
@@ -63,7 +54,6 @@ public class Lexer implements ILexer {
         Token token = consumeToken();
 
         currentToken = token;
-        tokens.add(token);
     }
 
     @Override
