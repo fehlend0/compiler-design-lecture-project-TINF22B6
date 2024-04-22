@@ -25,7 +25,7 @@ public class ReaderTest {
 
     @Test
     @DisplayName("Test for getChar()")
-    public void testGetChar_FirstChar() throws IOException {
+    public void testGetChar_FirstChar(){
         Reader reader = new Reader(testfile);
         reader.advance();
         assertEquals(reader.getChar(), 'I');
@@ -35,7 +35,7 @@ public class ReaderTest {
     }
     @Test
     @DisplayName("Test for End of file")
-    public void isEOF() throws IOException {
+    public void isEOF(){
         Reader reader = new Reader(emptyfile);
         reader.advance();
         assertEquals(reader.isEOF(), true);

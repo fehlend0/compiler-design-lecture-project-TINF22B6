@@ -5,7 +5,7 @@ import java.io.IOException;
 public interface IReader {
   char getChar();
   CodeLoc getCodeLoc();
-  void advance() throws IOException;
+  void advance();
   void expect(char expectedChar) throws Exception;
   boolean isEOF();
 }

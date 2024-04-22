@@ -18,7 +18,7 @@ public class LexerTest {
 
     @Test
     @DisplayName("Test for End of file")
-    public void isEOF() throws IOException {
+    public void isEOF(){
         Lexer lexer = new Lexer(emptyfile);
         List<Token> tokens = new ArrayList<>();
         do {
@@ -33,7 +33,7 @@ public class LexerTest {
 
     @Test
     @DisplayName("Test for invalid token")
-    public void isInvalid() throws IOException {
+    public void isInvalid(){
         Lexer lexer = new Lexer(invalidFile);
         List<Token> tokens = new ArrayList<>();
         do {
@@ -47,7 +47,7 @@ public class LexerTest {
 
     @Test
     @DisplayName("Test for valid file")
-    public void isValid() throws IOException{
+    public void isValid(){
         Lexer lexer = new Lexer(testfile);
         List<Token> tokens = new ArrayList<>();
         do {

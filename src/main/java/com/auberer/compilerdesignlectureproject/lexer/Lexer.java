@@ -21,7 +21,7 @@ public class Lexer implements ILexer {
 
     private List<StateMachine> stateMachineList = new ArrayList<>();
 
-    public Lexer(String inputFilePath) throws IOException {
+    public Lexer(String inputFilePath){
         this.reader = new Reader(inputFilePath);
 
         stateMachineList.add(new IdentifierStateMachine());
@@ -46,7 +46,7 @@ public class Lexer implements ILexer {
     }
 
     @Override
-    public void advance() throws IOException {
+    public void advance(){
         // Skip any whitespaces
         while (Character.isWhitespace(reader.getChar())) {
             reader.advance();
@@ -82,7 +82,7 @@ public class Lexer implements ILexer {
         return currentToken.getCodeLoc();
     }
 
-    private Token consumeToken() throws IOException {
+    private Token consumeToken(){
 
         if(reader.isEOF()){
             return new Token(TokenType.TOK_EOF, "EOF", reader.getCodeLoc());

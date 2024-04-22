@@ -15,10 +15,15 @@ public class Reader implements IReader{
     private CodeLoc codeLoc;
     private boolean eof = false;
 
-    public Reader(String filePath) throws IOException {
-        this.inputStream = new FileInputStream(filePath);
-        this.codeLoc = new CodeLoc(1,0);
-        advance(); // Initialisiert das erste Zeichen
+    public Reader(String filePath){
+        try {
+            this.inputStream = new FileInputStream(filePath);
+            this.codeLoc = new CodeLoc(1, 0);
+            advance(); // Initialisiert das erste Zeichen
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     public char getChar() {
@@ -33,17 +38,22 @@ public class Reader implements IReader{
         return codeLoc;
     }
 
-    public void advance() throws IOException {
-        currentChar = inputStream.read();
-        if (currentChar == -1) {
-            eof = true;
-        } else {
-            if (currentChar == '\n') {
-                codeLoc.line++;
-                codeLoc.column = 1;
+    public void advance(){
+        try{
+            currentChar = inputStream.read();
+            if (currentChar == -1) {
+                eof = true;
             } else {
-                codeLoc.column++;
+                if (currentChar == '\n') {
+                    codeLoc.line++;
+                    codeLoc.column = 1;
+                } else {
+                    codeLoc.column++;
+                }
             }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
         }
     }
     public void expect(char expectedChar) throws IOException {
@@ -57,7 +67,12 @@ public class Reader implements IReader{
     public boolean isEOF() {
         return eof;
     }
-    public void close() throws IOException {
-        inputStream.close();
+    public void close() {
+        try{
+            inputStream.close();
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }

@@ -21,7 +21,6 @@ public class CompilerDesignLectureProject {
                 tokens.add(lexer.getToken());
             }
             while(!lexer.isEOF());
-            System.out.println(tokens.size());
         }
         catch (Exception ex){
             ex.printStackTrace();
